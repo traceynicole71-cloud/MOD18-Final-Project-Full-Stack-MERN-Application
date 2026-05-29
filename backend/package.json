@@ -1,7 +1,7 @@
 {
   "name": "mod18_capstone_project",
   "version": "1.0.0",
-  "description": "",
+  "description": "Pro-Tasker App",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

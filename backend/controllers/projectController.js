@@ -38,3 +38,75 @@ res.status(200).json({ success: true, data: project });
 };
 
 //POST api projects
+const createProject = async (req, res, next) => {
+    try {
+        const { name, description } = req.body;
+        //Authentication user id from protect middleware
+        const project = await Project.create({
+            name,
+            description,
+            owner: req.user.id
+        });
+
+        res.status(201).json({ success: true, data: project });
+    } catch (error) {
+        next(error);
+    }
+};
+
+//PUT api projects id
+const updateProject = async (req, res, next) => {
+    try {
+        let project = await Project.findById(req.params.id);
+
+        if (!project) {
+            res.status(404);
+            throw new Error('Project resource not found');
+        }
+        //Security check for owner
+        if (project.owner.toString() !== req.user.id) {
+            res.status(403);
+            throw new Error('Action forbidden. You do not own this project workspace');
+        }
+
+        project = await Project.findByIdAndUpdate(req.params.id.req.body, {
+            new: true,
+            runValidators: true
+        });
+
+        res.status(200).json({ success: true, data: project });
+    } catch (error) {
+        next(error);
+    }
+};
+
+//DELETE api projects id
+const deleteProject = async (req, res, next) => {
+    try {
+        const project = await Project.findById(req.params.id);
+
+        if (!project) {
+            res.status(404);
+            throw new Error('Project resource not found');
+        }
+        //Security check for owner
+        if (project.owner.toString() !== req.user.id) {
+            res.status(403);
+            throw new Error('Action forbidden. You do not own this project workspace');
+        }
+
+        await project.deleteOne();
+
+        res.status(200).json({ success: true, message: 'Project workspace permanently deleted'});
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports ={
+    getProjects,
+    getProjectById,
+    createProject,
+    updateProject,
+    deleteProject
+};

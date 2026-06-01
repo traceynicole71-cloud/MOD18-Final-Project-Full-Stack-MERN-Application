@@ -16,11 +16,11 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: {true, 'Please add a password',
-            minlength: 6,
-            select: false
+        required: [true, 'Please add a password'],
+        minlength: 6,
+        select: false
     }
-}, { timestamps, true });
+}, { timestamps: true });
 
 //Pre-save hook to hash password before storing
 userSchema.pre('save', async function (next) {

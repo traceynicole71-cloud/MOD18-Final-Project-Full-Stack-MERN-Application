@@ -27,4 +27,6 @@ router.route('/:id')
 .put(updateProject)
 .delete(deleteProject);
 
+//Re-route nested paths over to Task sub-router layout
+router.use('/:projectId/tasks', require('./taskRoutes'));
 module.export = router;

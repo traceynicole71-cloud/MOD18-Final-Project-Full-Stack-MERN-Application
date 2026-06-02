@@ -2,7 +2,8 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const connectDB = required('./config/db');
+const connectDB = require('./config/db');
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 dotenv.config();
 
@@ -14,19 +15,18 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-//Routing
+//Core routing
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/projects', require('./routes/projectRoutes'));
 
 //Error handler
-app.use((error, req, res, next) => {
-    const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-    res.status(statusCode).json({
-        message: error.message,
-        stack: process.env.NODE_ENV === 'production' ? null : error.stack,
-    });
-});
+app.use(notFound);
+app.use(errorHandler);
 
-//PORT
+//Runtime server execution listener
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+app.listen(PORT, () => {
+    console.log(`[SYSTEM ONLINE]: Pro-Tasker API listening on port ${PORT}`);
+    console.log(`[ENVIRONMENT MODE]: Running in ${process.env.NODE_ENV || 'development'} stage`);
+});

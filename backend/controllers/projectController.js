@@ -1,5 +1,5 @@
 const Project = require('../models/Project');
-//GET api projects
+//GET Get all projects belonging to user
 const getProjects = async (req, res, next) => {
     try {
 //Find projects by owner or collaborator
@@ -13,7 +13,7 @@ res.status(200).json({ success: true, count: projects.length, data: projects });
     }
 };
 
-//GET api project by id
+//GET get details for single project
 const getProjectById = async (req, res, next) => {
     try {
 const project = await Project.findById(req.params.id).populate('owner', 'name email');
@@ -37,7 +37,7 @@ res.status(200).json({ success: true, data: project });
     }
 };
 
-//POST api projects
+//POST create new project
 const createProject = async (req, res, next) => {
     try {
         const { name, description } = req.body;
@@ -54,7 +54,7 @@ const createProject = async (req, res, next) => {
     }
 };
 
-//PUT api projects id
+//PUT update project information
 const updateProject = async (req, res, next) => {
     try {
         let project = await Project.findById(req.params.id);
@@ -80,7 +80,7 @@ const updateProject = async (req, res, next) => {
     }
 };
 
-//DELETE api projects id
+//DELETE delete project workspace
 const deleteProject = async (req, res, next) => {
     try {
         const project = await Project.findById(req.params.id);

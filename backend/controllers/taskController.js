@@ -98,4 +98,39 @@ const updateTask = async (req, res, next) => {
 };
 
 //DELETE delete a task from project
-cosnt 
+const deleteTask = async (req, res, next) => {
+    try {
+        const project = await Project.findById(req.params.projectId);
+        if (!project) {
+            res.status(404);
+            throw new Error('Parent project workspace not found');
+        }
+        //Authorization check
+        const isOwner = project.owner.toString() === req.user.id;
+        const isCollaborator = project.collaborators.includes(re.user.id);
+        if (!isOwner && !isCollaborator) {
+            res.status(403);
+            throw new Error('Unauthorized to remove tasks from this project workspace');
+        }
+
+        const task = await Task.findById(req.params.id);
+        if (!task) {
+            res.status(404);
+            throw new Error('Task resource not found');
+        }
+
+        if (task.project.toString() !== req.params.projectId) {
+            res.status(400);
+            throw new Error('Task configuration mismatch with parent project data');
+        }
+        await task.deleteOne();
+
+        res.status(200).json({ success: true, message: 'Task permanently removed from workspace' });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = { getTask, createTask, updateTask, deleteTask };
+
+

@@ -22,14 +22,14 @@ export const useTasks = (projectId) => {
     }, [projectId]);
 
     //Create new task inside workspace
-    const createTask = async (DataTransferItemList, description) => {
+    const createTask = async (title, description) => {
         setError(null);
         try {
             const res = await API.post(`/projects/${projectId}/tasks`, { title, description });
             setTasks((prev) => [...prev, res.data.data]);
             return res.data.data;
         } catch (error) {
-            setError(err.response?.data?.message ||'Failed to generate task');
+            setError(error.response?.data?.message || 'Failed to generate task');
             throw error;
         }
     };
@@ -38,25 +38,25 @@ export const useTasks = (projectId) => {
     const updateTaskStatus = async (taskId, newStatus) => {
         setError(null);
         try {
-            const res = await API.put(`/projects/${projectId}/tasks.${taskId}`, { status: newStatus });
+            const res = await API.put(`/projects/${projectId}/tasks/${taskId}`, { status: newStatus });
             setTasks((prev) => prev.map((t) => (t._id === taskId ? res.data.data : t)));
         } catch (error) {
-            setError(err.response?.data?.message ||'Failed to update task');
+            setError(error.response?.data?.message || 'Failed to update task');
             throw error;
-        };
-
-        //Delete a task
-        const deleteTask = async (taskId) => {
-            setError(null);
-            try {
-                await API.delete(`/projects/${projectId}/tasks/${taskId}`);
-                setTasks((prev) => prev.filter((t) => t._id !== taskId));
-            } catch (error) {
-                setError(err.response?.data?.message || 'Failed to delete task');
-                throw error;
-            }
-        };
-
-        return { tasks, loading, error, fetchTasks, createTask, updateTaskStatus, deleteTask };
+        }
     };
-}
+
+    //Delete a task
+    const deleteTask = async (taskId) => {
+        setError(null);
+        try {
+            await API.delete(`/projects/${projectId}/tasks/${taskId}`);
+            setTasks((prev) => prev.filter((t) => t._id !== taskId));
+        } catch (error) {
+            setError(error.response?.data?.message || 'Failed to delete task');
+            throw error;
+        }
+    };
+
+    return { tasks, loading, error, fetchTasks, createTask, updateTaskStatus, deleteTask };
+};

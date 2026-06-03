@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTasks } from '../hooks/useTasks';
+import TaskItem from '../components/TaskItem';
 
 export default function ProjectDetail() {
   const { id: projectId } = useParams();
@@ -8,7 +9,7 @@ export default function ProjectDetail() {
   //Inject background hooks
   const { tasks, loading, error, fetchTasks, createTask, updateTaskStatus, deleteTask } = useTasks(projectId);
   //Manage user-input forms 
-  const [taskTtitle, setTaskTitle] = useState('');
+  const [taskTitle, setTaskTitle] = useState('');
   const [taskDesc, setTaskDesc] = useState('');
   const [collabEmail, setCollabEmail] = useState('');
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
@@ -142,27 +143,7 @@ const handleAddTaskSubmit = async (e) => {
               <h3 className="text-center font-bold text-xs text-[#8be9fd] uppercase tracking-widest mb-4">To Do</h3>
               <div className="space-y-4">
                 {tasks.filter(t => t.status === 'To Do').map(task => (
-                  <div key={task._id} className="bg-[#282a36]/40 border border-[#44475a] rounded-lg p-4 shadow-md hover:border-[#8be9fd]/40 transition duration-200">
-                    <h4 className="font-bold text-sm text-[#f8f8f2] mb-1">{task.title}</h4>
-                    <p className="text-xs text-[#f8f8f2]/60 font-light mb-4">Desc: {task.description}</p>
-                    <div className="flex justify-between items-center pt-2 border-t border-[#44475a]/30">
-                      <div className="flex items-center space-x-1">
-                        <span className="text-[10px] uppercase font-bold text-[#f8f8f2]/40 mr-1">Move:</span>
-                        <button 
-                          onClick={() => updateTaskStatus(task._id, 'In Progress')}
-                          className="bg-[#1e1f29] border border-[#50fa7b] text-[#50fa7b] text-[10px] px-2 py-1 rounded hover:bg-[#50fa7b] hover:text-[#1e1f29] transition duration-150 font-bold"
-                        >
-                          &rarr;
-                        </button>
-                      </div>
-                      <button 
-                        onClick={() => deleteTask(task._id)}
-                        className="border border-[#ff79c6] text-[#ff79c6] text-[10px] font-bold px-2 py-1 rounded hover:bg-[#ff79c6] hover:text-[#1e1f29] transition duration-150 inline-flex items-center space-x-1"
-                      >
-                        <span>🗑️</span> <span>Delete</span>
-                      </button>
-                    </div>
-                  </div>
+                  <TaskItem key={task._id} task={task} onUpdateStatus={updateTaskStatus} onDelete={deleteTask} />
                 ))}
               </div>
             </div>
@@ -172,33 +153,7 @@ const handleAddTaskSubmit = async (e) => {
               <h3 className="text-center font-bold text-xs text-[#50fa7b] uppercase tracking-widest mb-4">In Progress</h3>
               <div className="space-y-4">
                 {tasks.filter(t => t.status === 'In Progress').map(task => (
-                  <div key={task._id} className="bg-[#282a36]/40 border border-[#44475a] rounded-lg p-4 shadow-md hover:border-[#50fa7b]/40 transition duration-200">
-                    <h4 className="font-bold text-sm text-[#f8f8f2] mb-1">{task.title}</h4>
-                    <p className="text-xs text-[#f8f8f2]/60 font-light mb-4">Desc: {task.description}</p>
-                    <div className="flex justify-between items-center pt-2 border-t border-[#44475a]/30">
-                      <div className="flex items-center space-x-1">
-                        <span className="text-[10px] uppercase font-bold text-[#f8f8f2]/40 mr-1">Move:</span>
-                        <button 
-                          onClick={() => updateTaskStatus(task._id, 'To Do')}
-                          className="bg-[#1e1f29] border border-[#50fa7b] text-[#50fa7b] text-[10px] px-2 py-1 rounded hover:bg-[#50fa7b] hover:text-[#1e1f29] transition duration-150 font-bold"
-                        >
-                          &larr;
-                        </button>
-                        <button 
-                          onClick={() => updateTaskStatus(task._id, 'Done')}
-                          className="bg-[#1e1f29] border border-[#50fa7b] text-[#50fa7b] text-[10px] px-2 py-1 rounded hover:bg-[#50fa7b] hover:text-[#1e1f29] transition duration-150 font-bold"
-                        >
-                          &rarr;
-                        </button>
-                      </div>
-                      <button 
-                        onClick={() => deleteTask(task._id)}
-                        className="border border-[#ff79c6] text-[#ff79c6] text-[10px] font-bold px-2.5 py-1 rounded hover:bg-[#ff79c6] hover:text-[#1e1f29] transition duration-150"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
+                  <TaskItem key={task._id} task={task} onUpdateStatus={updateTaskStatus} onDelete={deleteTask} />
                 ))}
               </div>
             </div>
@@ -208,27 +163,7 @@ const handleAddTaskSubmit = async (e) => {
               <h3 className="text-center font-bold text-xs text-[#50fa7b] uppercase tracking-widest mb-4">Done</h3>
               <div className="space-y-4">
                 {tasks.filter(t => t.status === 'Done').map(task => (
-                  <div key={task._id} className="bg-[#282a36]/40 border border-[#44475a] rounded-lg p-4 shadow-md opacity-75 border-dashed hover:border-[#50fa7b]/40 transition duration-200">
-                    <h4 className="font-bold text-sm text-[#f8f8f2] mb-1 line-through decoration-[#44475a]">{task.title}</h4>
-                    <p className="text-xs text-[#f8f8f2]/40 font-light mb-4">Desc: {task.description}</p>
-                    <div className="flex justify-between items-center pt-2 border-t border-[#44475a]/30">
-                      <div className="flex items-center space-x-1">
-                        <span className="text-[10px] uppercase font-bold text-[#f8f8f2]/40 mr-1">Move:</span>
-                        <button 
-                          onClick={() => updateTaskStatus(task._id, 'In Progress')}
-                          className="bg-[#1e1f29] border border-[#50fa7b] text-[#50fa7b] text-[10px] px-2 py-1 rounded hover:bg-[#50fa7b] hover:text-[#1e1f29] transition duration-150 font-bold"
-                        >
-                          &larr;
-                        </button>
-                      </div>
-                      <button 
-                        onClick={() => deleteTask(task._id)}
-                        className="border border-[#ff79c6] text-[#ff79c6] text-[10px] font-bold px-2.5 py-1 rounded hover:bg-[#ff79c6] hover:text-[#1e1f29] transition duration-150"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
+                  <TaskItem key={task._id} task={task} onUpdateStatus={updateTaskStatus} onDelete={deleteTask} />
                 ))}
               </div>
             </div>

@@ -1,26 +1,23 @@
-import { createContext, useState, useEffect } from 'react';
+import { useState } from 'react';
 import API from './api';
-
-export const AuthContext = createContext();
+import { AuthContext } from './authContext';
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    //Synchronize mounting state with browser storage
-    useEffect(() => {
+    const [user, setUser] = useState(() => {
         const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            try {
-                setUser(JSON.parse(storedUser));
-            } catch (error) {
-                console.error('Session token parsing error:', error);
-                localStorage.removeItem('user'); //Clear corrupted storage object
-            }
+        if (!storedUser) {
+            return null;
         }
-        setLoading(false);
-    }, []);
+
+        try {
+            return JSON.parse(storedUser);
+        } catch {
+            localStorage.removeItem('user');
+            return null;
+        }
+    });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     //Centralized login handler using API network
     const login = async (email, password) => {
@@ -36,7 +33,7 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             const fallbackError = error.response?.data?.message || 'Authentication failed';
             setError(fallbackError);
-            throw new Error(fallbackError);
+            throw new Error(fallbackError, { cause: error });
         } finally {
             setLoading(false);
         }
@@ -47,7 +44,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await API.post('/users.register', { name, email, password });
+            const response = await API.post('/users/register', { name, email, password });
 
             localStorage.setItem('user', JSON.stringify(response.data));
             setUser(response.data);
@@ -55,6 +52,7 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             const fallbackError = error.response?.data?.message || 'Registration failed';
             setError(fallbackError);
+            throw new Error(fallbackError, { cause: error });
         } finally {
             setLoading(false);
         }
@@ -62,7 +60,7 @@ export const AuthProvider = ({ children }) => {
 
     //Centralized logout handler
     const logout = () => {
-        localStorage.removedItem('user');
+        localStorage.removeItem('user');
         setUser(null);
         setError(null);
     };

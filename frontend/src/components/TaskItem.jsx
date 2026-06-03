@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function TaskItem({ task, onUpdateStatus, onDelete }) {
     const currentStatus = task.status;
 

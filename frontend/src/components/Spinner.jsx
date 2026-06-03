@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function Spinner({ message = "Retrieving live streams..." }) {
     return (
         <div className="flex flex-col items-center justify-center py-24 space-y-4">

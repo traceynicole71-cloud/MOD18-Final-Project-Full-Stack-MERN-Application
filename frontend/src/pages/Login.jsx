@@ -1,13 +1,13 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../context/authContext';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [formError, setFromError] = useState(null);
+    const [formError, setFormError] = useState(null);
 
-    const { login, error: apiError } = useContext(AuthContext);
+    const { login, error: apiError, setError } = useContext(AuthContext);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,7 +26,8 @@ export default function Login() {
         try {
             await login(email, password);
             navigate('/dashboard');
-        } catch (error) {
+        } catch {
+          setFormError('Sign in failed. Please verify your credentials.');
         }
     };
 

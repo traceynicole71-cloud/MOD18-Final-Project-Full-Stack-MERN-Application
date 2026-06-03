@@ -1,28 +1,18 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import PAI from '../context/api';
+import { useProjects } from '../hooks/useProjects';
+import API from '../context/api';
 
 export default function Dashboard() {
-    const [projects, setProjects] = useState([]);
-    const [loading, setLoading] = useState(true);
     const { logout, user } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    //Pull workspaces match database records
-    useEffect(() => {
-        const fetchWorkspaces = async () => {
-            try {
-                const res = await API.get('/projects');
-                setProjects(res.data.data);
-            } catch (error) {
-                console.error("API Fetch breakdown:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchWorkspaces();
-    }, []);
+    const { projects, loading, error, fetchProjects, deleteProjects } = useProjects();
+
+   useEffect(() => {
+    fetchProjects();
+   }, [fetchProjects]);
 
     return (
         <div className="min-h-screen bg-[#1e1f29] text-[#f8f8f2] font-sans selection:bg-[#44475a]">

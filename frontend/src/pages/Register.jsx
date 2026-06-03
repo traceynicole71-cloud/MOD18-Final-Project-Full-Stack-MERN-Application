@@ -36,13 +36,13 @@ export default function Register() {
         try {
             await register(name, email, password);
             navigate('/dashboard');
-        } catch {
-          setFormError('Registration failed. Please try again.');
+        } catch (error) {
+          setFormError(error.message || 'Registration failed. Please try again.');
         }
     };
 
     return (
-    <div className="min-h-screen bg-[#1e1f29] text-[#f8f8f2] font-sans flex flex-col items-center pt-12 px-4 selection:bg-[#44475a]">
+    <div className="min-h-screen bg-gradient-to-b from-[#1a1c20] to-[#2a2d33] text-[#f8f8f2] font-sans flex flex-col items-center pt-12 px-4 selection:bg-[#ff79c6]/40">
       
       <div className="w-full max-w-[400px] flex items-center space-x-3 mb-8 cursor-pointer" onClick={() => navigate('/login')}>
         <svg className="w-8 h-8 text-[#ff79c6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -51,7 +51,7 @@ export default function Register() {
         <span className="text-2xl font-bold tracking-wider text-[#ff79c6]">Pro-Tasker</span>
       </div>
 
-      <div className="bg-[#282a36]/40 border border-[#44475a] w-full max-w-[400px] rounded-xl p-8 shadow-2xl backdrop-blur-sm">
+      <div className="bg-[#2b2f36]/80 border border-[#50fa7b]/30 w-full max-w-[400px] rounded-xl p-8 shadow-2xl backdrop-blur-sm">
         <h2 className="text-3xl font-medium text-center text-[#ff79c6] mb-6 tracking-tight">Create Account</h2>
         
         {(formError || apiError) && (
@@ -65,61 +65,61 @@ export default function Register() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-[#f8f8f2] uppercase tracking-wider mb-2">Full Name</label>
+            <label className="block text-xs font-semibold text-[#50fa7b] uppercase tracking-wider mb-2">Full Name</label>
             <input 
               type="text" 
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="John Doe" 
-              className="w-full bg-[#1e1f29] border border-[#44475a] focus:border-[#8be9fd] focus:ring-1 focus:ring-[#8be9fd] rounded-lg px-4 py-2.5 text-sm text-[#f8f8f2] placeholder-[#f8f8f2]/30 outline-none transition"
+              className="w-full bg-[#1d2025] border border-[#4a4f58] focus:border-[#ff79c6] focus:ring-1 focus:ring-[#ff79c6]/50 rounded-lg px-4 py-2.5 text-sm text-[#f8f8f2] placeholder-[#f8f8f2]/30 outline-none transition"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#f8f8f2] uppercase tracking-wider mb-2">Email Address</label>
+            <label className="block text-xs font-semibold text-[#50fa7b] uppercase tracking-wider mb-2">Email Address</label>
             <input 
               type="email" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com" 
-              className="w-full bg-[#1e1f29] border border-[#44475a] focus:border-[#8be9fd] focus:ring-1 focus:ring-[#8be9fd] rounded-lg px-4 py-2.5 text-sm text-[#f8f8f2] placeholder-[#f8f8f2]/30 outline-none transition"
+              className="w-full bg-[#1d2025] border border-[#4a4f58] focus:border-[#ff79c6] focus:ring-1 focus:ring-[#ff79c6]/50 rounded-lg px-4 py-2.5 text-sm text-[#f8f8f2] placeholder-[#f8f8f2]/30 outline-none transition"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#f8f8f2] uppercase tracking-wider mb-2">Password</label>
+            <label className="block text-xs font-semibold text-[#50fa7b] uppercase tracking-wider mb-2">Password</label>
             <input 
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••••••"
-              className="w-full bg-[#1e1f29] border border-[#44475a] focus:border-[#8be9fd] focus:ring-1 focus:ring-[#8be9fd] rounded-lg px-4 py-2.5 text-sm text-[#f8f8f2] placeholder-[#f8f8f2]/30 outline-none transition"
+              className="w-full bg-[#1d2025] border border-[#4a4f58] focus:border-[#ff79c6] focus:ring-1 focus:ring-[#ff79c6]/50 rounded-lg px-4 py-2.5 text-sm text-[#f8f8f2] placeholder-[#f8f8f2]/30 outline-none transition"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#f8f8f2] uppercase tracking-wider mb-2">Confirm Password</label>
+            <label className="block text-xs font-semibold text-[#50fa7b] uppercase tracking-wider mb-2">Confirm Password</label>
             <input 
               type="password" 
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="••••••••••••"
-              className="w-full bg-[#1e1f29] border border-[#44475a] focus:border-[#8be9fd] focus:ring-1 focus:ring-[#8be9fd] rounded-lg px-4 py-2.5 text-sm text-[#f8f8f2] placeholder-[#f8f8f2]/30 outline-none transition"
+              className="w-full bg-[#1d2025] border border-[#4a4f58] focus:border-[#ff79c6] focus:ring-1 focus:ring-[#ff79c6]/50 rounded-lg px-4 py-2.5 text-sm text-[#f8f8f2] placeholder-[#f8f8f2]/30 outline-none transition"
             />
           </div>
 
           <button 
             type="submit" 
-            className="w-full bg-[#50fa7b] hover:bg-[#69ff94] text-[#1e1f29] font-bold py-3 px-4 rounded-lg shadow-lg hover:shadow-[#50fa7b]/20 transition duration-200 text-sm tracking-wide transform active:scale-[0.99] mt-2 outline-none"
+            className="w-full bg-[#50fa7b] hover:bg-[#69ff94] text-[#1d2025] font-bold py-3 px-4 rounded-lg shadow-lg hover:shadow-[#50fa7b]/25 transition duration-200 text-sm tracking-wide transform active:scale-[0.99] mt-2 outline-none"
           >
             Sign Up
           </button>
         </form>
 
-        <div className="mt-6 text-center border-t border-[#44475a] pt-4">
+        <div className="mt-6 text-center border-t border-[#ff79c6]/40 pt-4">
           <p className="text-xs text-[#f8f8f2]/60">
             Already have an account?{' '}
-            <span onClick={() => navigate('/login')} className="text-[#ff79c6] hover:underline cursor-pointer font-medium ml-1">
+            <span onClick={() => navigate('/login')} className="text-[#ff79c6] hover:text-[#50fa7b] hover:underline cursor-pointer font-medium ml-1 transition">
               Sign In
             </span>
           </p>

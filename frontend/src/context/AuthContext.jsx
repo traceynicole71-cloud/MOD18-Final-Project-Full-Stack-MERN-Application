@@ -31,7 +31,8 @@ export const AuthProvider = ({ children }) => {
             setUser(response.data);
             return response.data; //Return data back for successful navigation loop
         } catch (error) {
-            const fallbackError = error.response?.data?.message || 'Authentication failed';
+            const fallbackError = error.response?.data?.message
+                || (error.request ? 'Cannot reach API server. Start backend on port 3000.' : 'Authentication failed');
             setError(fallbackError);
             throw new Error(fallbackError, { cause: error });
         } finally {
@@ -50,7 +51,8 @@ export const AuthProvider = ({ children }) => {
             setUser(response.data);
             return response.data;
         } catch (error) {
-            const fallbackError = error.response?.data?.message || 'Registration failed';
+            const fallbackError = error.response?.data?.message
+                || (error.request ? 'Cannot reach API server. Start backend on port 3000.' : 'Registration failed');
             setError(fallbackError);
             throw new Error(fallbackError, { cause: error });
         } finally {

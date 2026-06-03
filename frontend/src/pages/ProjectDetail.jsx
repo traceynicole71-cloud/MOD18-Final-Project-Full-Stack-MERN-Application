@@ -2,17 +2,44 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTasks } from '../hooks/useTasks';
 import TaskItem from '../components/TaskItem';
+import API from '../context/api';
 
 export default function ProjectDetail() {
   const { id: projectId } = useParams();
   const navigate = useNavigate();
   //Inject background hooks
   const { tasks, loading, error, fetchTasks, createTask, updateTaskStatus, deleteTask } = useTasks(projectId);
+  const [project, setProject] = useState(null);
+  const [projectLoading, setProjectLoading] = useState(false);
+  const [projectError, setProjectError] = useState(null);
   //Manage user-input forms 
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDesc, setTaskDesc] = useState('');
   const [collabEmail, setCollabEmail] = useState('');
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+  const [showEditProjectModal, setShowEditProjectModal] = useState(false);
+  const [projectName, setProjectName] = useState('');
+  const [projectDescription, setProjectDescription] = useState('');
+  const [submittingProject, setSubmittingProject] = useState(false);
+
+  useEffect(() => {
+    const fetchProject = async () => {
+      if (!projectId) return;
+
+      setProjectLoading(true);
+      setProjectError(null);
+      try {
+        const response = await API.get(`/projects/${projectId}`);
+        setProject(response.data.data);
+      } catch (fetchError) {
+        setProjectError(fetchError.response?.data?.message || 'Failed to load project details');
+      } finally {
+        setProjectLoading(false);
+      }
+    };
+
+    fetchProject();
+  }, [projectId]);
 
   useEffect(() => {
     if (projectId) {
@@ -20,18 +47,48 @@ export default function ProjectDetail() {
     }
   }, [projectId, fetchTasks]);
 
-const handleAddTaskSubmit = async (e) => {
-  e.preventDefault();
-  if (!taskTitle || !taskDesc) return;
-  try {
-    await createTask(taskTitle, taskDesc);
-    setTaskTitle('');
+  const handleAddTaskSubmit = async (e) => {
+    e.preventDefault();
+    if (!taskTitle || !taskDesc) return;
+    try {
+      await createTask(taskTitle, taskDesc);
+      setTaskTitle('');
       setTaskDesc('');
       setShowAddTaskModal(false);
-  } catch (error) {
-    console.error('Failed to inject new task data model:', error);
-  }
-};
+    } catch (taskError) {
+      console.error('Failed to inject new task data model:', taskError);
+    }
+  };
+
+  const handleOpenEditProject = () => {
+    setProjectName(project?.name || '');
+    setProjectDescription(project?.description || '');
+    setProjectError(null);
+    setShowEditProjectModal(true);
+  };
+
+  const handleEditProjectSubmit = async (e) => {
+    e.preventDefault();
+    if (!projectName.trim() || !projectDescription.trim()) {
+      setProjectError('Project name and description are required');
+      return;
+    }
+
+    setSubmittingProject(true);
+    setProjectError(null);
+    try {
+      const response = await API.put(`/projects/${projectId}`, {
+        name: projectName.trim(),
+        description: projectDescription.trim(),
+      });
+      setProject(response.data.data);
+      setShowEditProjectModal(false);
+    } catch (submitError) {
+      setProjectError(submitError.response?.data?.message || 'Failed to update project');
+    } finally {
+      setSubmittingProject(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#1e1f29] text-[#f8f8f2] font-sans selection:bg-[#44475a]">
@@ -57,11 +114,19 @@ const handleAddTaskSubmit = async (e) => {
         
         {/* Workspace Metadata Descriptions Header Frame */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-[#f8f8f2] mb-1">Project Workspace Workspace</h1>
+          <h1 className="text-2xl font-bold text-[#f8f8f2] mb-1">
+            {projectLoading ? 'Loading project...' : project?.name || 'Project Workspace'}
+          </h1>
           <p className="text-xs text-[#50fa7b]">
-            Description: <span className="text-[#f8f8f2]/70 font-light ml-1">Live synchronized database workspace container environment.</span>
+            Description: <span className="text-[#f8f8f2]/70 font-light ml-1">{project?.description || 'Live synchronized database workspace container environment.'}</span>
           </p>
         </div>
+
+        {projectError && (
+          <div className="mb-6 rounded-xl border border-[#ff5555] bg-[#ff5555]/10 px-4 py-3 text-sm text-[#ff5555]">
+            {projectError}
+          </div>
+        )}
 
         {/* Action Controls Toolbar Area */}
         <div className="flex flex-wrap gap-4 items-center justify-between mb-8">
@@ -87,10 +152,39 @@ const handleAddTaskSubmit = async (e) => {
             </div>
           </div>
 
-          <button className="bg-[#1e1f29] border border-[#ff79c6] text-[#ff79c6] hover:bg-[#ff79c6] hover:text-[#1e1f29] font-bold text-xs px-4 py-2.5 rounded transition inline-flex items-center space-x-1">
+          <button onClick={handleOpenEditProject} className="bg-[#1e1f29] border border-[#ff79c6] text-[#ff79c6] hover:bg-[#ff79c6] hover:text-[#1e1f29] font-bold text-xs px-4 py-2.5 rounded transition inline-flex items-center space-x-1">
             <span>📝</span> <span>Edit Project</span>
           </button>
         </div>
+
+        {showEditProjectModal && (
+          <form onSubmit={handleEditProjectSubmit} className="bg-[#282a36]/40 border border-[#ff79c6] rounded-xl p-6 mb-8 max-w-xl space-y-4">
+            <h3 className="text-sm font-bold text-[#ff79c6]">Edit Project Details</h3>
+            <div className="grid grid-cols-1 gap-3">
+              <input
+                type="text"
+                placeholder="Project name"
+                value={projectName}
+                onChange={(e) => setProjectName(e.target.value)}
+                className="bg-[#1e1f29] border border-[#44475a] focus:border-[#ff79c6] rounded p-2 text-xs outline-none"
+              />
+              <textarea
+                placeholder="Project description"
+                value={projectDescription}
+                onChange={(e) => setProjectDescription(e.target.value)}
+                className="bg-[#1e1f29] border border-[#44475a] focus:border-[#ff79c6] rounded p-2 text-xs outline-none h-24 resize-none"
+              />
+            </div>
+            <div className="flex gap-3">
+              <button type="submit" disabled={submittingProject} className="bg-[#ff79c6] text-[#1e1f29] font-bold text-xs px-4 py-2 rounded hover:bg-[#ff92d0] transition disabled:cursor-not-allowed disabled:opacity-70">
+                {submittingProject ? 'Saving...' : 'Save Changes'}
+              </button>
+              <button type="button" onClick={() => setShowEditProjectModal(false)} className="border border-[#44475a] text-[#f8f8f2] font-bold text-xs px-4 py-2 rounded hover:border-[#f8f8f2] transition">
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
 
         {/* Inline Pop-down Form Panel for creating tasks */}
         {showAddTaskModal && (

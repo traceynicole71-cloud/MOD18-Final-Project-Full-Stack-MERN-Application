@@ -69,7 +69,7 @@ const updateProject = async (req, res, next) => {
             throw new Error('Action forbidden. You do not own this project workspace');
         }
 
-        project = await Project.findByIdAndUpdate(req.params.id.req.body, {
+        project = await Project.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true
         });

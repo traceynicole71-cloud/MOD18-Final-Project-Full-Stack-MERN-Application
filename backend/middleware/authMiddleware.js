@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const user = require('../models.User');
+const User = require('../models/User');
 
-const protect = async (req, resizeBy, next) => {
+const protect = async (req, res, next) => {
     let token;
 
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -9,9 +9,9 @@ const protect = async (req, resizeBy, next) => {
             //Get token from header
             token = req.headers.authorization.split(' ')[1];
             //Verify token
-            const decoded = jwt.verify(token, process.env.JWT_SECREDT);
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
 //Get user from token and attach
-req.user = await UserActivation.findById(decoded.id).select('-password');
+req.user = await User.findById(decoded.id).select('-password');
 
 next();
 } catch (error) {

@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true }); //must be true to inherit req.params from project routing points
 
-const { getTask, createTask, updateTask, deleteTask } = require('../controllers/taskController');
-const { protect } = require('../middleware.authMiddleware');
+const { getTasks, createTask, updateTask, deleteTask } = require('../controllers/taskController');
+const { protect } = require('../middleware/authMiddleware');
 
 router.use(protect);
 

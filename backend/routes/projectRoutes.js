@@ -29,4 +29,4 @@ router.route('/:id')
 
 //Re-route nested paths over to Task sub-router layout
 router.use('/:projectId/tasks', require('./taskRoutes'));
-module.export = router;
+module.exports = router;

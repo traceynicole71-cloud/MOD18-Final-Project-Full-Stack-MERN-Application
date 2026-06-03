@@ -15,6 +15,23 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+//Basic health route for browser hits at /
+app.get('/', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Pro-Tasker API is running',
+        docs: {
+            users: '/api/users',
+            projects: '/api/projects'
+        }
+    });
+});
+
+//Suppress favicon 404 noise when opening API URL in a browser
+app.get('/favicon.ico', (req, res) => {
+    res.status(204).end();
+});
+
 //Core routing
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/projects', require('./routes/projectRoutes'));

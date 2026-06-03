@@ -23,13 +23,13 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 //Pre-save hook to hash password before storing
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function () {
     //Hash if its not modified
     if (!this.isModified('password')) {
-        next();
+        return;
     }
-    const salt = await bcryot.genSalt(10);
-    this.password = await bcrypt.hasg(this.password, salt);
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
 });
 
 //Compare password with hashed password

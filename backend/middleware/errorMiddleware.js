@@ -17,7 +17,7 @@ const errorHandler = (err, req, res, next) => {
     //Trigger when data payloads fail constraint rules
     if (err.name === 'ValidationError') {
         statusCode = 400;
-        message = Object.values(err.errors).map((val) => val.message).joint(', ');
+        message = Object.values(err.errors).map((val) => val.message).join(', ');
     }
 
     //Log error trace to server terminal

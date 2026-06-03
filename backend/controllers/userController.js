@@ -1,4 +1,4 @@
-const User = require('../modles/User');
+const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
 //Helper function to generate signed JWT payload
@@ -14,7 +14,7 @@ const registerUser = async (req, res, next) => {
         const { name, email, password } = req.body;
 
         //Check to see if user already exists
-        constuserExists = await User.findOne({ email });
+        const userExists = await User.findOne({ email });
         if (userExists) {
             res.status(400);
             throw new Error('A user account with that email already exists');

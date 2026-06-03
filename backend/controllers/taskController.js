@@ -28,7 +28,7 @@ const getTasks = async (req, res, next) => {
 };
 
 //POST create new task inside of a project
-const createTAsk = async (req, res, next) => {
+const createTask = async (req, res, next) => {
     try {
         const project = await Project.findById(req.params.projectId);
 
@@ -63,7 +63,7 @@ const createTAsk = async (req, res, next) => {
 //PUT update task details or status
 const updateTask = async (req, res, next) => {
     try {
-        const project = await Project.findById(re.params.projectId);
+        const project = await Project.findById(req.params.projectId);
         if (!project) {
             res.status(404);
             throw new Error('Parent project workspace not found');
@@ -82,7 +82,7 @@ const updateTask = async (req, res, next) => {
             throw new Error('Task resource not found');
         }
         //Verify task belonds to declared URLworkspace parameters
-        if (task.project.toString() !== re.params.projectId) {
+        if (task.project.toString() !== req.params.projectId) {
             res.status(400);
             throw new Error('Task configuration mismatch with parent project data');
         }
@@ -107,7 +107,7 @@ const deleteTask = async (req, res, next) => {
         }
         //Authorization check
         const isOwner = project.owner.toString() === req.user.id;
-        const isCollaborator = project.collaborators.includes(re.user.id);
+        const isCollaborator = project.collaborators.includes(req.user.id);
         if (!isOwner && !isCollaborator) {
             res.status(403);
             throw new Error('Unauthorized to remove tasks from this project workspace');
@@ -131,6 +131,6 @@ const deleteTask = async (req, res, next) => {
     }
 };
 
-module.exports = { getTask, createTask, updateTask, deleteTask };
+module.exports = { getTasks, createTask, updateTask, deleteTask };
 
 

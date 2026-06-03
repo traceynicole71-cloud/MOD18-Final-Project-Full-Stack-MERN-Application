@@ -7,7 +7,6 @@
 - [Overview](#overview)
   - [Challenge](#challenge)
   - [Screenshot](#screenshot)
-  - [Links](#links)
 - [My process](#my-process)
   - [Built with](#built-with)
   - [What I learned](#what-i-learned)
@@ -33,12 +32,6 @@ Pro-Tasker is a full-stack project management application designed to be used as
 <img width="1033" height="728" alt="Screenshot 2026-06-03 at 3 04 27 PM" src="https://github.com/user-attachments/assets/75852d51-f206-4c06-b543-3232f9412613" />
 
 
-
-
-### Links
-
-- Solution URL: file:///Users/traceyroberts/PS_Tech_Training/Mod7%20Project%20IP-Address-Tracker/index.html
-- Live Site URL: https://eclectic-starburst-e85af1.netlify.app/
 
 ## My process
 Phase 1: Built out the database model and REST API formulation

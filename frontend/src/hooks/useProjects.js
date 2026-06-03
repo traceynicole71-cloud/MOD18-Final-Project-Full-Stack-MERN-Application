@@ -44,7 +44,7 @@ export const useProjects = () => {
             //Filter out deleted projects from dashboard
             setProjects((prev) => prev.filter((p) => p._id !== projectId));
         } catch (error) {
-            setError(.err.response?.data?.message || 'Failed to delete project');
+            setError(err.response?.data?.message || 'Failed to delete project');
             throw error;
         }
     };

@@ -135,12 +135,12 @@ export default function ProjectDetail() {
               onClick={() => setShowAddTaskModal(!showAddTaskModal)}
               className="bg-[#1e1f29] border border-[#50fa7b] text-[#50fa7b] hover:bg-[#50fa7b] hover:text-[#1e1f29] font-bold text-xs px-4 py-2.5 rounded transition duration-200"
             >
-              {showAddTaskModal ? 'Close Form Array' : '+ Add New Task'}
+              {showAddTaskModal ? 'Close Form' : '+ Add New Task'}
             </button>
             
             {/* Invite Collaborator Form Component Section */}
             <div className="flex items-center bg-[#1e1f29] border border-[#44475a] rounded px-3 py-1.5 space-x-2">
-              <span className="text-xs font-bold text-[#f8f8f2]/60">Invite Collab</span>
+              <span className="text-xs font-bold text-[#f8f8f2]/60">Invite Collaborator</span>
               <input 
                 type="email" 
                 value={collabEmail}
@@ -189,7 +189,7 @@ export default function ProjectDetail() {
         {/* Inline Pop-down Form Panel for creating tasks */}
         {showAddTaskModal && (
           <form onSubmit={handleAddTaskSubmit} className="bg-[#282a36]/40 border border-[#44475a] rounded-xl p-6 mb-8 max-w-xl space-y-4">
-            <h3 className="text-sm font-bold text-[#ff79c6]">Initialize New Workspace Task Element</h3>
+            <h3 className="text-sm font-bold text-[#ff79c6]">Edit New Task </h3>
             <div className="grid grid-cols-1 gap-3">
               <input 
                 type="text" 
@@ -206,7 +206,7 @@ export default function ProjectDetail() {
               />
             </div>
             <button type="submit" className="bg-[#50fa7b] text-[#1e1f29] font-bold text-xs px-4 py-2 rounded hover:bg-[#69ff94] transition">
-              Inject to Board
+              Send
             </button>
           </form>
         )}
@@ -234,7 +234,7 @@ export default function ProjectDetail() {
             
             {/* COLUMN LANE 1: TO DO */}
             <div className="bg-[#1e1f29] border border-[#44475a] rounded-xl p-4 min-h-[450px]">
-              <h3 className="text-center font-bold text-xs text-[#8be9fd] uppercase tracking-widest mb-4">To Do</h3>
+              <h3 className="text-center font-bold text-xs text-[#ef4444] uppercase tracking-widest mb-4">To Do</h3>
               <div className="space-y-4">
                 {tasks.filter(t => t.status === 'To Do').map(task => (
                   <TaskItem key={task._id} task={task} onUpdateStatus={updateTaskStatus} onDelete={deleteTask} />
@@ -244,7 +244,7 @@ export default function ProjectDetail() {
 
             {/* COLUMN LANE 2: IN PROGRESS */}
             <div className="bg-[#1e1f29] border border-[#44475a] rounded-xl p-4 min-h-[450px]">
-              <h3 className="text-center font-bold text-xs text-[#50fa7b] uppercase tracking-widest mb-4">In Progress</h3>
+              <h3 className="text-center font-bold text-xs text-[#eab308] uppercase tracking-widest mb-4">In Progress</h3>
               <div className="space-y-4">
                 {tasks.filter(t => t.status === 'In Progress').map(task => (
                   <TaskItem key={task._id} task={task} onUpdateStatus={updateTaskStatus} onDelete={deleteTask} />

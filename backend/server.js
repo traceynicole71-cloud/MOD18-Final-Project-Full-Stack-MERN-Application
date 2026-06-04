@@ -7,9 +7,15 @@ const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 dotenv.config();
 
-connectDB();
+if (!process.env.MONGO_URI) {
+    console.error("[CRITICAL CONFIG ERROR]: process.env.MONGO_URI is completely missing from the system environment parameters.");
+    console.error("Please verify your Key spelling inside the Render Environment dashboard tab.");
+    process.exit(1);
+}
 
 const app = express();
+
+connectDB();
 
 //Middleware
 app.use(cors());

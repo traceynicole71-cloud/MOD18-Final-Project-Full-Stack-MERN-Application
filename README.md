@@ -30,9 +30,6 @@ Pro-Tasker is a full-stack project management application designed to be used as
 <img width="1032" height="740" alt="Screenshot 2026-06-03 at 3 02 39 PM" src="https://github.com/user-attachments/assets/67453130-254a-4dc1-a11c-605ae5cf9286" />
 <img width="1020" height="740" alt="Screenshot 2026-06-03 at 3 03 16 PM" src="https://github.com/user-attachments/assets/3262369a-11a8-433e-b821-bd830abda2eb" />
 <img width="1033" height="728" alt="Screenshot 2026-06-03 at 3 04 27 PM" src="https://github.com/user-attachments/assets/75852d51-f206-4c06-b543-3232f9412613" />
-
-
-
 ## My process
 Phase 1: Built out the database model and REST API formulation
 Phase 2: Built the security and transport architecture

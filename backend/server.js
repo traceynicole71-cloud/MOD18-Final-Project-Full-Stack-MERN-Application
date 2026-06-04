@@ -43,7 +43,7 @@ app.use(errorHandler);
 //Runtime server execution listener
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`[SYSTEM ONLINE]: Pro-Tasker API listening on port ${PORT}`);
     console.log(`[ENVIRONMENT MODE]: Running in ${process.env.NODE_ENV || 'development'} stage`);
 });
